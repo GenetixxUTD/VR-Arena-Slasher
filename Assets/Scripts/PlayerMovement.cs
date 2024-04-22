@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        colliderHeadsetPos();
         Quaternion headDir = Quaternion.Euler(0, playerRig.Camera.transform.eulerAngles.y, 0);
         Vector3 movementDirection = headDir * new Vector3(InputAxis.x, 0, InputAxis.y);
         character.Move(movementDirection * Time.fixedDeltaTime * movementSpeed);
@@ -55,5 +56,12 @@ public class PlayerMovement : MonoBehaviour
         float sphereRayLength = character.center.y + 0.01f;
         bool hasHit = Physics.SphereCast(sphereStart, character.radius, Vector3.down, out RaycastHit hit, sphereRayLength, groundLayer);
         return hasHit;
+    }
+
+    private void colliderHeadsetPos()
+    {
+        character.height = playerRig.CameraInOriginSpaceHeight;
+        Vector3 centerHeight = transform.InverseTransformPoint(playerRig.Camera.transform.position);
+        character.center = new Vector3(centerHeight.x, character.height / 2, centerHeight.z);
     }
 }
