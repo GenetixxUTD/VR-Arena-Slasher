@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -28,6 +29,8 @@ public class Enemy : MonoBehaviour
 
     private Outline thisOutline;
 
+    private Animator modelAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,7 @@ public class Enemy : MonoBehaviour
         thisCollider = this.GetComponent<Collider>();
         thisOutline = this.GetComponent<Outline>();
         thisAgent = this.GetComponent<NavMeshAgent>();
+        modelAnimator = this.GetComponent<Animator>();
         playerReference = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -64,11 +68,15 @@ public class Enemy : MonoBehaviour
 
     void manageEnemyMovement()
     {
-        transform.LookAt(playerReference.transform.position);
+        transform.LookAt(new Vector3(playerReference.transform.position.x, transform.position.y, playerReference.transform.position.z));
 
         if(Vector3.Distance(transform.position, playerReference.transform.position) > maxDistance)
         {
             thisAgent.SetDestination(playerReference.transform.position);
+
+            modelAnimator.SetBool("forwardswalk", true);
+            modelAnimator.SetBool("idle", false);
+            modelAnimator.SetBool("backwardswalk", false);
         }
         else if(Vector3.Distance(transform.position, playerReference.transform.position) < minDistance)
         {
@@ -76,10 +84,18 @@ public class Enemy : MonoBehaviour
             Vector3 newDestination = transform.position + playerDir;
 
             thisAgent.SetDestination(newDestination);
+
+            modelAnimator.SetBool("forwardswalk", false);
+            modelAnimator.SetBool("idle", false);
+            modelAnimator.SetBool("backwardswalk", true);
         }
         else
         {
             thisAgent.SetDestination(transform.position);
+
+            modelAnimator.SetBool("forwardswalk", false);
+            modelAnimator.SetBool("idle", true);
+            modelAnimator.SetBool("backwardswalk", false);
         }
     }
 }
