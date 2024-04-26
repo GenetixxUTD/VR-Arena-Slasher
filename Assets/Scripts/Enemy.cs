@@ -36,7 +36,9 @@ public class Enemy : MonoBehaviour
 
     private int attackingQuadrant; //10 for not attacking
 
-    private IEnumerator attackReference;
+    private Coroutine attackReference;
+
+    public GameObject warningPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +49,7 @@ public class Enemy : MonoBehaviour
         thisAgent = this.GetComponent<NavMeshAgent>();
         modelAnimator = this.GetComponent<Animator>();
         playerReference = GameObject.FindGameObjectWithTag("Player");
+        attackingQuadrant = 10;
     }
 
     // Update is called once per frame
@@ -56,8 +59,9 @@ public class Enemy : MonoBehaviour
         {
             playerReference.GetComponent<PlayerCombat>().leaveQuadrant(attackingQuadrant);
             StopCoroutine(attackReference);
+            playerReference.GetComponent<PlayerCombat>().warningLights[attackingQuadrant].gameObject.SetActive(false);
             attackingQuadrant = 10;
-            takeABreather();
+            StartCoroutine("takeABreather");
         }
         if(dummyAIState == EnemyState.attacking && attackingQuadrant == 10)
         {
@@ -126,27 +130,30 @@ public class Enemy : MonoBehaviour
         int randomint = Random.Range(0, 4);
         if(playerReference.GetComponent<PlayerCombat>().checkQuadrantOccupancy(randomint))
         {
-            takeABreather();
+            StartCoroutine("takeABreather");
         }
         else
         {
             playerReference.GetComponent<PlayerCombat>().occupyQuadrant(randomint);
             attackingQuadrant = randomint;
-            attackReference = attackRoutine();
+            playerReference.GetComponent<PlayerCombat>().warningLights[randomint].gameObject.SetActive(true);
+            attackReference = StartCoroutine("attackRoutine");
         }
     }
 
     public IEnumerator attackRoutine()
     {
         yield return new WaitForSeconds(5);
-        
-        if(playerReference.GetComponent<PlayerCombat>().getSwordQuadrant() != attackingQuadrant)
+
+        playerReference.GetComponent<PlayerCombat>().warningLights[attackingQuadrant].gameObject.SetActive(false);
+        if (playerReference.GetComponent<PlayerCombat>().getSwordQuadrant() != attackingQuadrant)
         {
             playerReference.GetComponent<PlayerCombat>().modifyHealth(-1);
             playerReference.GetComponent<PlayerCombat>().leaveQuadrant(attackingQuadrant);
+            
             attackingQuadrant = 10;
             
-            takeABreather();
+            StartCoroutine("takeABreather");
         }
         else
         {

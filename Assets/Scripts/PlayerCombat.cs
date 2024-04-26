@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    public enum Quadrant
-    {
-        Top,
-        Left,
-        Right,
-        Bottom
-    }
 
+    [SerializeField]
     private int health;
 
-    private bool[] occupiedQuadrants = { false, false, false, false }; //0= top, 1= left, 2= down, 3= right
+    public GameObject[] warningLights;
 
-    public Quadrant quadrantResult;
+    private bool[] occupiedQuadrants = { false, false, false, false }; //0= top, 1= left, 2= down, 3= right
 
     private Camera mainCamera;
     public GameObject playerSword;
@@ -48,6 +42,11 @@ public class PlayerCombat : MonoBehaviour
         {
             return 2;
         }
+    }
+
+    private void Update()
+    {
+        playerSword = GameObject.FindGameObjectWithTag("sword").transform.GetChild(1).gameObject;
     }
 
     public bool checkQuadrantOccupancy(int quadrant)
