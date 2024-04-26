@@ -10,11 +10,14 @@ public class Enemy : MonoBehaviour
     private enum EnemyState
     {
         idle,
-        attacking
+        attacking,
+        stunned
     }
 
     [SerializeField]
     private EnemyState dummyAIState;
+
+    private EnemyState oldState;
 
     public float minDistance;
     public float maxDistance;
@@ -31,6 +34,10 @@ public class Enemy : MonoBehaviour
 
     private Animator modelAnimator;
 
+    private int attackingQuadrant; //10 for not attacking
+
+    private IEnumerator attackReference;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +52,23 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if((dummyAIState == EnemyState.stunned || dummyAIState == EnemyState.idle) && attackingQuadrant != 10)
+        {
+            playerReference.GetComponent<PlayerCombat>().leaveQuadrant(attackingQuadrant);
+            StopCoroutine(attackReference);
+            attackingQuadrant = 10;
+            takeABreather();
+        }
+        if(dummyAIState == EnemyState.attacking && attackingQuadrant == 10)
+        {
+            prepareAttack();
+        }
         amIInVision();
-        manageEnemyMovement();
+        if(dummyAIState != EnemyState.stunned)
+        {
+            manageEnemyMovement();
+        }
+        
     }
 
     void amIInVision()
@@ -97,5 +119,43 @@ public class Enemy : MonoBehaviour
             modelAnimator.SetBool("idle", true);
             modelAnimator.SetBool("backwardswalk", false);
         }
+    }
+
+    public void prepareAttack()
+    {
+        int randomint = Random.Range(0, 4);
+        if(playerReference.GetComponent<PlayerCombat>().checkQuadrantOccupancy(randomint))
+        {
+            takeABreather();
+        }
+        else
+        {
+            playerReference.GetComponent<PlayerCombat>().occupyQuadrant(randomint);
+            attackingQuadrant = randomint;
+            attackReference = attackRoutine();
+        }
+    }
+
+    public IEnumerator attackRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        
+        if(playerReference.GetComponent<PlayerCombat>().getSwordQuadrant() != attackingQuadrant)
+        {
+            playerReference.GetComponent<PlayerCombat>().modifyHealth(-1);
+            playerReference.GetComponent<PlayerCombat>().leaveQuadrant(attackingQuadrant);
+            attackingQuadrant = 10;
+            
+            takeABreather();
+        }
+        else
+        {
+            dummyAIState = EnemyState.stunned;
+        }
+    }
+
+    public IEnumerator takeABreather()
+    {
+        yield return new WaitForSeconds(Random.Range(3, 6));
     }
 }
