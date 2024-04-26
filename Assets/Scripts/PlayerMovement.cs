@@ -14,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 InputAxis;
     private CharacterController character;
 
+    public XRNode smoothTurnController;
+    private Vector2 SmoothTurnAxis;
+
     public float gravity = -9.81f;
     private float downwardSpeed;
     public LayerMask groundLayer;
@@ -51,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
     {
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputController);
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out InputAxis);
+
+        device = InputDevices.GetDeviceAtXRNode(smoothTurnController);
+        device.TryGetFeatureValue(CommonUsages.primary2DAxis, out SmoothTurnAxis);
     }
 
     private void FixedUpdate()
@@ -67,6 +73,24 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             TeleportationHandManager.SetActive(true);
+        }
+
+        if(selectedRotation == rotationType.snap)
+        {
+            SnapTurnProvider.enabled = true;
+        }
+        else
+        {
+            SnapTurnProvider.enabled = false;
+            
+            if(SmoothTurnAxis.x >= .8f)
+            {
+                this.transform.RotateAround(this.transform.position, this.transform.up, 20f * .1f);
+            }
+            else if(SmoothTurnAxis.x <= -.8f)
+            {
+                this.transform.RotateAround(this.transform.position, this.transform.up, 20f * -.1f);
+            }
         }
 
         if (isGrounded())
@@ -107,6 +131,14 @@ public class PlayerMovement : MonoBehaviour
             case 1:
                 selectedMovement = movementType.teleport;
                 break;
+        }
+
+        switch(PlayerPrefs.GetInt("rotationtype"))
+        {
+            case 0:
+                selectedRotation = rotationType.snap; break;
+            case 1:
+                selectedRotation = rotationType.smooth; break;
         }
     }
 }

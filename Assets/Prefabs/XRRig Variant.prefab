@@ -2053,13 +2053,15 @@ MonoBehaviour:
   movementSpeed: 4
   inputController: 4
   playerRig: {fileID: 0}
+  smoothTurnController: 5
   gravity: -9.81
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  TeleportationHandManager: {fileID: 0}
+  TeleportationHandManager: {fileID: 4568628426337156972}
   SnapTurnProvider: {fileID: 7496762219175795575}
   selectedMovement: 0
+  selectedRotation: 0
 --- !u!143 &5848765240971665230
 CharacterController:
   m_ObjectHideFlags: 0
