@@ -1242,7 +1242,7 @@ MonoBehaviour:
   m_UpdateTrackingType: 0
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
-  m_ModelPrefab: {fileID: 8257164199894480794, guid: 953f35d27764f2e4296ba925db70bf5f, type: 3}
+  m_ModelPrefab: {fileID: 5904757016915288058, guid: 4143ad91a2ffa7547901bccf9cd5cdb3, type: 3}
   m_ModelParent: {fileID: 0}
   m_Model: {fileID: 0}
   m_AnimateModel: 0
