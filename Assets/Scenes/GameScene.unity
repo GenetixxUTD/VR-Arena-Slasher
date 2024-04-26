@@ -462,6 +462,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &679103258 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 933837771913454704, guid: 029f834c6db93b948af33310e90180db, type: 3}
+  m_PrefabInstance: {fileID: 1827973528}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1136846533
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -659,6 +670,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 101733169941373913, guid: 029f834c6db93b948af33310e90180db, type: 3}
+      propertyPath: playerRig
+      value: 
+      objectReference: {fileID: 679103258}
+    - target: {fileID: 101733169941373913, guid: 029f834c6db93b948af33310e90180db, type: 3}
       propertyPath: selectedMovement
       value: 0
       objectReference: {fileID: 0}
@@ -678,6 +693,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2750893300140733940, guid: 029f834c6db93b948af33310e90180db, type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 544539152}
     - target: {fileID: 6190640399446992178, guid: 029f834c6db93b948af33310e90180db, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
