@@ -26,7 +26,7 @@ public class magicPortal : MonoBehaviour
 
     private IEnumerator spawnSkeleton()
     {
-        yield return new WaitForSeconds(Random.Range(5, 10));
+        yield return new WaitForSeconds(Random.Range(10, 16));
 
         Instantiate(skeletonPrefab, spawnLocation);
         spawning = false;

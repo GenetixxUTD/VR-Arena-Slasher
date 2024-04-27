@@ -172,6 +172,7 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
 
+        modelAnimator.SetTrigger("attackcall");
         playerReference.GetComponent<PlayerCombat>().warningLights[attackingQuadrant].gameObject.SetActive(false);
         if (playerReference.GetComponent<PlayerCombat>().getSwordQuadrant() != attackingQuadrant)
         {
@@ -184,7 +185,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            
+            modelAnimator.SetTrigger("stun call");
             dummyAIState = EnemyState.stunned;
             attackingQuadrant = 10;
             StartCoroutine("takeABreather");

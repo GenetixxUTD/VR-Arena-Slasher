@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PlayerCombat : MonoBehaviour
@@ -9,6 +10,8 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField]
     private int health;
+
+    public Slider healthBar;
 
     public GameObject[] warningLights;
 
@@ -53,6 +56,7 @@ public class PlayerCombat : MonoBehaviour
     private void Update()
     {
         playerSword = GameObject.FindGameObjectWithTag("sword").gameObject;
+        healthBar.value = health;
 
         if(health == 0)
         {
