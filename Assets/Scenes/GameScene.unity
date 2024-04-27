@@ -2015,6 +2015,10 @@ PrefabInstance:
       propertyPath: TeleportationHandManager
       value: 
       objectReference: {fileID: 1698954112}
+    - target: {fileID: 1531266726123908672, guid: 029f834c6db93b948af33310e90180db, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1668229551889805107, guid: 029f834c6db93b948af33310e90180db, type: 3}
       propertyPath: m_Name
       value: XRRig Variant
@@ -2075,6 +2079,10 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 544539152}
+    - target: {fileID: 9169651260183704844, guid: 029f834c6db93b948af33310e90180db, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
