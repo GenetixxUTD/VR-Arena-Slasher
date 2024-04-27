@@ -58,7 +58,7 @@ public class PlayerCombat : MonoBehaviour
         playerSword = GameObject.FindGameObjectWithTag("sword").gameObject;
         healthBar.value = health;
 
-        if(health == 0)
+        if(health == 0 || gameObject.transform.position.y < -30)
         {
             onDeath();
         }
