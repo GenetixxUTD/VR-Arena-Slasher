@@ -12,6 +12,19 @@ public class SettingsManager : MonoBehaviour
     public GameObject snapAngle;
     public TMP_Text snapAngleText;
 
+    public TMP_Text highScoreText;
+
+    public Slider movementTypeSlider;
+    public Slider rotationTypeSlider;
+    public Slider snapAngleSlider;
+
+    private void Start()
+    {
+        fetchSettings();
+
+        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("highscore");
+    }
+
     public void onMovementTypeSlider(float value)
     {
         switch (value)
@@ -48,6 +61,24 @@ public class SettingsManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("snapangle", (int)value);
         snapAngleText.text = "Snap Angle: " + value;
+    }
+
+    public void fetchSettings()
+    {
+        if(PlayerPrefs.GetInt("snapangle") == 0)
+        {
+            rotationTypeSlider.value = 45;
+            onRotationValueSlider(45);
+        }
+        else
+        {
+            onRotationValueSlider(PlayerPrefs.GetInt("snapangle"));
+        }
+
+        onRotationTypeSlider(PlayerPrefs.GetInt("rotationtype"));
+        rotationTypeSlider.value = (PlayerPrefs.GetInt("rotationtype"));
+        onMovementTypeSlider(PlayerPrefs.GetInt("movementtype"));
+        movementTypeSlider.value = PlayerPrefs.GetInt("movementtype");
     }
 
 }

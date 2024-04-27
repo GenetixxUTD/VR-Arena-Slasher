@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -38,11 +39,13 @@ public class Enemy : MonoBehaviour
 
     private Coroutine attackReference;
 
-    public GameObject warningPrefab;
+    private int health;
+    public Slider healthSlider;
 
     // Start is called before the first frame update
     void Start()
     {
+        health = 5;
         mainCamera = Camera.main;
         thisCollider = this.GetComponent<Collider>();
         thisOutline = this.GetComponent<Outline>();
@@ -55,6 +58,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(dummyAIState == EnemyState.stunned)
+        {
+            healthSlider.gameObject.SetActive(true);
+        }
+        else
+        {
+            healthSlider.gameObject.SetActive(false);
+        }
+        healthSlider.value = health;
         if((dummyAIState == EnemyState.stunned || dummyAIState == EnemyState.idle) && attackingQuadrant != 10)
         {
             playerReference.GetComponent<PlayerCombat>().leaveQuadrant(attackingQuadrant);
@@ -63,14 +75,22 @@ public class Enemy : MonoBehaviour
             attackingQuadrant = 10;
             StartCoroutine("takeABreather");
         }
-        if(dummyAIState == EnemyState.attacking && attackingQuadrant == 10)
+        if (dummyAIState != EnemyState.stunned)
+        {
+            amIInVision();
+        }
+        if (dummyAIState == EnemyState.attacking && attackingQuadrant == 10)
         {
             prepareAttack();
         }
-        amIInVision();
         if(dummyAIState != EnemyState.stunned)
         {
             manageEnemyMovement();
+        }
+
+        if(health == 0)
+        {
+            onDeath();
         }
         
     }
@@ -82,7 +102,14 @@ public class Enemy : MonoBehaviour
 
         if(GeometryUtility.TestPlanesAABB(cFrustum, tempBounds))
         {
-            dummyAIState = EnemyState.attacking;
+            if(Vector3.Distance(this.gameObject.transform.position, playerReference.gameObject.transform.position) <= 5f)
+            {
+                dummyAIState = EnemyState.attacking;
+            }
+            else
+            {
+                dummyAIState = EnemyState.idle;
+            }
             thisOutline.enabled = true;
         }
         else
@@ -157,12 +184,35 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            
             dummyAIState = EnemyState.stunned;
+            attackingQuadrant = 10;
+            StartCoroutine("takeABreather");
         }
     }
 
     public IEnumerator takeABreather()
     {
+        modelAnimator.SetBool("forwardswalk", false);
+        modelAnimator.SetBool("idle", true);
+        modelAnimator.SetBool("backwardswalk", false);
+        thisAgent.SetDestination(transform.position);
+        dummyAIState = EnemyState.stunned;
         yield return new WaitForSeconds(Random.Range(3, 6));
+        dummyAIState = EnemyState.idle;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if(collision.gameObject.tag == "sword" && dummyAIState == EnemyState.stunned)
+        {
+            health -= 1;
+        }
+    }
+
+    private void onDeath()
+    {
+        playerReference.GetComponent<PlayerCombat>().score += 1;
+        Destroy(this.gameObject);
     }
 }

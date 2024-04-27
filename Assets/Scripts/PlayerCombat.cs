@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -15,11 +17,15 @@ public class PlayerCombat : MonoBehaviour
     private Camera mainCamera;
     public GameObject playerSword;
 
+    public int score;
+
     private void Start()
     {
         mainCamera = Camera.main;
         health = 10;
     }
+
+    
 
     public int getSwordQuadrant()
     {
@@ -46,7 +52,12 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
-        playerSword = GameObject.FindGameObjectWithTag("sword").transform.GetChild(1).gameObject;
+        playerSword = GameObject.FindGameObjectWithTag("sword").gameObject;
+
+        if(health == 0)
+        {
+            onDeath();
+        }
     }
 
     public bool checkQuadrantOccupancy(int quadrant)
@@ -67,5 +78,15 @@ public class PlayerCombat : MonoBehaviour
     public void modifyHealth(int modify)
     {
         health += modify;
+    }
+
+    private void onDeath()
+    {
+        if(score > PlayerPrefs.GetInt("highscore"))
+        {
+            PlayerPrefs.SetInt("highscore", score);
+        }
+
+        SceneManager.LoadScene("MainMenu");
     }
 }
